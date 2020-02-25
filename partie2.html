@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+		<meta name="description" content="partie deux du cours android">
+        <link rel="stylesheet" href="style.css" /> 
+        <!-- pour les icones on a utiliser font awsome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+        <title>Android-partie2</title>
+    </head>
+    <body>
+        <div id="bloc_page">
+               
+            <header>
+                <div id="titre_principal">
+                    <h1><i class="fab fa-android"></i> Développez votre premiere application Android</h1>
+                   
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="Acceuil.html">Accueil</a></li>
+                        <li><a href="partie1.html">Partie 1</a></li>
+                        <li><a href="#">Partie 2</a></li>
+                        <li><a href="partie3.html">Partie 3</a></li>
+                        <li><a href="quizz.html">Quiz</a></li>
+                    </ul>
+                </nav>
+            </header>
+            
+            
+            </div>
+            
+            <section>
+               <article>
+                    <h1> 1.Créez une seconde activité </h1>
+                    <p>Dans la première partie de ce cours, nous avons créé une première activité, permettant de récupérer le prénom de l'utilisateur et de démarrer le jeu. Dans cette deuxième partie, nous allons créer une seconde activité. Cette activité permettra d'afficher le contenu du jeu. Elle sera démarrée par la première activité lorsque l'utilisateur cliquera sur le bouton de lancement du jeu.
+Vous vous demandez sûrement comment fonctionne le jeu ! C'est une demande légitime. C'est très simple : TopQuiz va poser une série de quatre questions à l'utilisateur, choisies aléatoirement parmi une banque de plusieurs questions. Pour chaque question, il aura le choix entre quatre réponses possibles.</br>
+ Dans cette vidéo nous allons voir comment créer une seconde activité  </br>
+ <iframe width="560" height="315" src="https://www.youtube.com/embed/9U6_HVQJ8hU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </p>
+              
+                    <h1> 2. Découvrez l'architecture Modèle-Vue-Contrôleur </h1>
+                    <p>Dans cette partie , nous allons aborder une notion d'architecture logicielle, afin de l'appliquer à notre application TopQuiz.  </br>
+                      Lorsque vous développez une application Android, vous êtes libres d'utiliser l'architecture logicielle de votre choix </br>
+                      De fait, les développeurs Android (mais pas qu'eux !) utilisent une architecture très courante appelée MVC, pour Model-View-Controller (ou Modèle-Vue-Controller en français, mais ça fait moins classe, je vous l'accorde). Cette architecture est très classique, et vous la retrouverez dans la majorité des développements. Elle n'est pas la seule, mais c'est celle-ci que nous allons étudier dans ce cours et l'appliquer à notre application TopQuiz. </br>
+           <i class="fas fa-exclamation-circle"></i> À partir de maintenant, j'utiliserai le trigramme MVC au lieu d'écrire Model-View-Controller. Vu que je n'ai qu'un seul doigt, c'est plus rapide à taper. <br>
+                     <h4 class="titrebleu"> L'architecture MVC: </h4> 
+                    L'architecture MVC consiste à découper son code pour qu'il appartienne à l'une des trois composantes du MVC. Lorsque vous créez une nouvelle classe ou un nouveau fichier, vous devez donc savoir à quelle composante il appartient :.</br>
+                    <dl>
+                      <dt>Modèle :</dt> <dd>contient les données de l'application et la logique métier. Par exemple, les comptes des utilisateurs, les produits que vous vendez, un ensemble de photos, etc. La composante modèle n'a aucune connaissance de l'interface graphique. Dans notre application TopQuiz, elle regroupera l'ensemble des questions et des réponses associées.</dd>
+                      <dt>Vue :</dt> <dd>contient tout ce qui est visible à l'écran et qui propose une interaction avec l'utilisateur. Par exemple, les boutons, les images, les zones de saisie, etc. Dans notre application TopQuiz, cette composante est définie dans les fichiers activity_main.xml et activity_game.xml.</dd>
+                      <dt>Contrôleur : </dt> <dd> c'est la "colle" entre la vue et le modèle, qui gère également la logique de l'application. Le contrôleur permet de réagir aux interactions de l'utilisateur et de lui présenter les données qu'il demande. Et ces données, où les récupère-t-il ? Dans le modèle bien entendu ! Dans notre application TopQuiz, cela correspond au code situé dans les fichiers MainActivity.java et GameActivity.java.</dd>
+                  </dl>
+                </br>
+                Afin de rendre votre code plus modulaire et maintenable (vos futurs collègues vous remercieront), n'hésitez pas à créer des paquetages complémentaires dans Android Studio. </br>
+              <p > <h4 class="titrebleu"> Application </h4> </br>
+                Lorsque l'utilisateur interagit avec l'application, par exemple en répondant à une question, voilà ce qu'il se passe : <br>
+                <img src="mvc.png"> <br>
+                Dans le point 3, le contrôleur pourrait tout à fait mettre à jour le modèle si nécessaire : par exemple si l'utilisateur mettait à jour ses préférences. <br>
+                <h4 class="titrebleu"> Avantages </h4> </br>
+                En appliquant l'architecture MVC, vous permettez à vos collègues de mieux comprendre votre code. Vous aurez également la garantie de pouvoir réutiliser votre code très facilement. Par exemple, vous pourriez décider d'exporter le modèle de votre application sous forme de librairie, afin qu'un autre développeur puis l'utiliser dans son application. Ainsi, peut-être proposera-t-il une interface graphique complètement différente de la vôtre ! <br>
+                <h4 class="titrebleu"> Inconvénients :  </h4> </br>
+                Vous aurez à créer et à maintenir davantage de fichiers (il est tellement plus tentant de tout mettre au même endroit !). Mais c'est un mal pour un bien, croyez-moi. 
+                <br> Voilà, vous venez de découvrir l'architecture MVC. Lorsque vous créez un fichier, posez-vous toujours la question suivante : à quelle composante du modèle MVC appartient-il ? Si vous ne savez pas répondre précisément, peut-être est-il nécessaire de re-découper votre code. </p>
+                 </p>
+                      <h1> 3. Définissez votre premier modele </h1>
+                    <p>
+ Dans cette vidéo nous allons voir comment définir un modele pour l'application :   </br>
+       <iframe width="560" height="315" src="https://www.youtube.com/embed/u8eLcaDeHSM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </p> <br>
+                    <h1> 4. Implémentez la logique de jeu dans le contrôleur </h1>
+                    <p>
+ Dans cette vidéo nous allons voir comment implementer notre jeu Quizz dans le controleur  :   </br>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/mP91Y6oDmMc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> 
+                    </p> <br>
+                      <h1> 5. Présentez le score au joueur  </h1>
+                    <p>
+                      Dans cette partie , nous allons continuer à développer la logique de jeu dans la classe GameActivity, et plus précisément la gestion du score du joueur : sa comptabilisation et son affichage. <br>
+                      <h4 class="titrebleu"> Gestion du nombre de questions </h4> <br>
+                      Tout d'abord, c'est à vous de décider combien de questions vous souhaitez proposer à l'utilisateur. Le plus simple consiste à créer un attribut de type int : <br>
+
+private int mNumberOfQuestions; <br>
+Puis d'initialiser sa valeur dans la méthode onCreate() : <br>
+
+mNumberOfQuestions = 4; <br>
+Cette variable vous permettra de déterminer quand arrêter le jeu. Prévoyez au moins deux fois plus de questions dans votre banque de questions, afin d'éviter de toujours voir apparaître les mêmes ! <br>
+
+Nous décidons par exemple qu'une partie comprend quatre questions. Il est donc nécessaire d'implémenter une logique permettant d'arrêter le jeu après la quatrième question posée. <br>
+
+La variable mNumberOfQuestions sera utilisée en tant que compteur pour savoir quand arrêter le jeu. De fait, à chaque fois que l'utilisateur répondra à une question, cette variable sera décrémentée. Tant qu'elle ne sera pas nulle, la question suivante sera posée. Sinon, le jeu s'arrête.<br>
+
+Le résultat est le suivant (à implémenter dans la méthode onClick(), après vérification de la réponse) : <br>
+                   <img src="nbq.png"> <br>
+                   <h4 class="titrebleu"> Gestion du score</h4>
+                   <h5> Comptabilisation du score </h5> <br>
+                   Cette partie là est assez simple, et je suis sûr que vous n'auriez pas besoin de moi pour cette partie. Très simplement, il suffit de déclarer une variable de type entier, puis d'incrémenter sa valeur à chaque fois que le joueur saisit une bonne réponse. <br>
+                   <h5> Affichage du score </h5>
+                   Lorsque le joueur a répondu à toutes les questions, la phase finale de jeu est enclenchée : <br>
+                   <ol>
+                     <li>Le score est affiché à l'utilisateur dans une boîte de dialogue ;</li>
+                     <li>L'écran d'accueil est automatiquement affiché lorsque l'utilisateur clique sur le bouton OK.</li>
+                   </ol>
+                   <br>
+                   La boîte de dialogue utilisée est gérée par la classe AlertDialog. Cette boîte de dialogue est entièrement paramétrable. Sachant que vous êtes encore de jeunes Padawans (bon je mets le lien Wikipedia à tout hasard, au cas où vous ayez vécu dans un bunker depuis votre naissance), nous allons l'utiliser de la manière la plus standard possible. À savoir : afficher un titre, un message et un bouton. <br>
+
+Avant d'aller plus loin, je dois vous avouer quelque chose. Je n'ai pas été tout à fait honnête avec vous. Je ne vous avais pas tout dit ! Je m'explique (roulement de tambour, suspens) : lorsque nous avons démarré la seconde activité (GameActivity en l'occurrence), la première activité (MainActivity, pour ne pas la nommer) n'a pas été détruite. Elle existe toujours ! En fait, l'affichage de GameActivity s'effectue au dessus de MainActivity. En d'autres termes, les deux activités se superposent. Pourquoi vous dis-je cela ? Vous allez comprendre ! <br>
+
+Voici le code permettant de configurer et d'afficher la boîte de dialogue : <br>
+                        <img src="boite.png"> <br>
+                         Voici quelques explications : <br>
+                         <ul>
+                           <li> Ligne 1 : il est nécessaire d'utiliser un objet spécifique pour "construire" la boîte de dialogue. C'est la sous-classe Builder qui s'en charge ;</li>
+                           <li>Ligne 3 : nous définissons le titre de la boîte de dialogue ;</li>
+                           <li>Ligne 4 : nous définissions le texte à afficher dans la boîte de dialogue ;</li>
+                           <li>Ligne 5 : nous définissons le texte du bouton à afficher, et fournissons l'implémentation de l'interface permettant de gérer le clic sur le bouton ;</li>
+                           <li>Ligne 11 : nous demandons à l'instance de Builder de construire la boîte de dialogue avec les paramètres que nous avons prédéfinis ;</li>
+                           <li>Ligne 12 : nous affichons notre belle boîte de dialogue.</li>
+                         </ul>
+                         <br> 
+                         Et la ligne 8 dans tout cela ? Eh bien la méthode finish() permet simplement de dire au système : j'en ai terminé avec l'activité courante, arrêtez-là et ramenez-moi à l'activité précédente. Pour faire simple, cela revient à cliquer sur le bouton Back du téléphone
+ 
+                    </p> <br>
+
+
+                   <input type="button"  id="btn3" value=" Partie 3 " onclick="javascript:location.href='partie3.html'">
+
+
+                </article>
+             
+                
+                <aside id="aside1">
+                    <h1>À Lire ! </h1>
+              
+                 <p><i class="fas fa-exclamation-circle"></i> Comment créer un sous-répertoire pour organiser votre code ? C'est très simple. Faites un clic droit sur le dossier dans lequel vous souhaitez créer un sous-répertoire, puis sélectionnez New > Package. Nommez-le (par exemple controller). Ensuite déplacez les fichiers dans ce nouveau répertoire (par exemple les fichiers de type Activity), et validez en cliquant sur le bouton Refactor. Android Studio va vous demander de confirmer votre choix : cliquez sur Do Refactor. </p>
+                 <p> Les boîtes de dialogue Android sont très puissantes. Comme vous pouvez le voir dans la <a href="https://developer.android.com/guide/topics/ui/dialogs">documentation</a> ,  tous les éléments peuvent être paramétrés : titres, couleurs, boutons, formats d'affichage, etc.</p>
+          
+                </aside>
+                
+
+                
+
+
+            </section>
+            
+            <footer>
+                <div id="App">
+                    2018 Copyright , All right reserved
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

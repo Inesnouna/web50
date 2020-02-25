@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+		<meta name="description" content="partie trois du cours android">
+        <link rel="stylesheet" href="style.css" /> 
+        <!-- pour les icones on a utiliser font awsome -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+        <title>Android-partie3</title>
+    </head>
+    <body>
+        <div id="bloc_page">
+               
+            <header>
+                <div id="titre_principal">
+                    <h1> <i class="fab fa-android"></i>Développez votre premiere application Android</h1>
+                   
+                </div>
+                
+                <nav>
+                    <ul>
+                        <li><a href="Acceuil.html">Accueil</a></li>
+                        <li><a href="partie1.html">Partie 1</a></li>
+                        <li><a href="partie2.html">Partie 2</a></li>
+                        <li><a href="#">Partie 3</a></li>
+                        <li><a href="quizz.html">Quiz</a></li>
+                    </ul>
+                </nav>
+            </header>
+            
+            
+            </div>
+            
+            <section>
+               <article>
+                    <h1> 1.Récupérez le score du joueur dans l'activité principale</h1>
+                    <p>Dans ce chapitre, nous allons faire communiquer la GameActivity avec la MainActivity, afin de récupérer le score du joueur pour pouvoir plus tard l'afficher sur l'écran d'accueil. </br>
+                    <h4 class="titrebleu"> Récupération du résultat d'une activité </h4> 
+                    <h5>Récupérer le résultat d'une activité</h5> <br>
+                    Si vous vous rappelez bien, nous avions démarré l'activité GameActivity en utilisant la méthode startActivity(). Si votre mémoire vous fait défaut, je vous invite à relire le code (dans la méthode onClick() du bouton de démarrage de jeu). <br>
+
+Maintenant, la donne a changé : nous souhaitons démarrer GameActivity et attendons de sa part un résultat, qui sera le score de l'utilisateur. Pour ce faire, la méthode à utiliser est startActivityForResult(). Sa signature est la suivante : <br>
+
+<code>public void startActivityForResult(Intent intent, int requestCode) </code>
+Le premier paramètre est le même que celui de startActivity(). Le second paramètre est plus intéressant : il permet de préciser un "code de requête", c'est à dire un identifiant lié à cette activité. Pourquoi ? Imaginez que votre activité possède cinq boutons, et que chaque bouton permette de lancer une activité différente. Eh bien cet identifiant vous permettra par la suite de savoir quelle activité vous envoie son résultat. <br>
+
+                    <h5>Démarrage d'une activité avec demande de résultat</h5> <br>
+                    Commencez tout d'abord par ajouter une variable d'instance pour définir l'identifiant de la GameActivity : <br>
+
+<code> private static final int GAME_ACTIVITY_REQUEST_CODE = 42; </code>
+Sa valeur a peu d'importance. Il faut simplement qu'elle soit unique si vous aviez des activités différentes à démarrer. <br>
+
+Ensuite, modifiez l'appel de création de la GameActivity en utilisant cette nouvelle méthode : <br>
+
+<code> startActivityForResult(gameActivity, GAME_ACTIVITY_REQUEST_CODE); </code>
+                       <h5> Envoi du résultat</h5> <br>
+                       Rendez-vous maintenant dans la GameActivity. Vous vous rappelez lorsque nous avions utilisé la méthode finish() pour arrêter l'activité et revenir à l'écran principal ? Oui, c'est exactement ici que nous allons renvoyer le score de l'utilisateur. <br>
+
+Pour ce faire, il est nécessaire de créer un Intent (nous avions déjà utilisé cette classe pour demander le démarrage de la GameActivity depuis la MainActivity). Dans le cas présent, nous allons nous en servir pour lui "attacher" le score de l'utilisateur, afin de pouvoir le renvoyer à la première activité. <br>
+
+Tout d'abord, pour "attacher" une valeur à un Intent, il est nécessaire d'utiliser la méthode putExtra(). Cette méthode possède différentes signatures, selon le type de valeur à attacher. Quelques exemples de signatures : <br>
+
+<code> public Intent putExtra(String name, boolean value);
+public Intent putExtra(String name, int value); 
+public Intent putExtra(String name, String value); </code>
+ Comme pour le stockage des préférences, il est nécessaire de fournir une "clé", car un Intent peut contenir plusieurs valeurs différentes. Dans notre cas, nous allons définir une variable de classe publique pour stocker le nom de la clé, afin qu'elle puisse être récupérée par la suite par la MainActivity. Ajoutez la variable suivante dans la GameActivity :<br>
+
+ <code> public static final String BUNDLE_EXTRA_SCORE = "BUNDLE_EXTRA_SCORE"; </code>
+Maintenant, mettez votre code à jour pour renvoyer le score de l'utilisateur : <br>
+
+ <code> Intent intent = new Intent(); 
+intent.putExtra(BUNDLE_EXTRA_SCORE, mScore);
+setResult(RESULT_OK, intent); 
+finish();  </code> <br>
+Quelques explications :
+<ul>
+  <li> Ligne 1 : nous créons une instance de la la classe Intent ;</li>
+  <li>Ligne 2 : nous attachons le score à l'Intent, avec la clé associée BUNDLE_EXTRA_SCORE. Cette clé sera par la suite utilisée par la MainActivity pour récupérer le score ;</li>
+  <li>Ligne 3 : nous précisons au système Android que l'activité s'est correctement terminée, et nous lui indiquons en second paramètre notre Intent (qui contient le score) ;</li>
+  <li>Ligne 4 : nous terminons l'activité.</li>
+</ul>
+<br> 
+Je sais ce que vous vous dites : cela aurait été quand même plus simple d'appeler finish(score). Eh oui, je suis d'accord avec vous, mais vous n'avez pas le choix : le mécanisme d'Intent est au cœur du système Android, c'est lui qui permet aux activités de communiquer entre elles.
+<h5>Récupération du résultat</h5>
+<br>
+Revenez dans le fichier de la MainActivity. Pour récupérer le résultat renvoyé par une activité, il est nécessaire de surcharger la méthode onActivityResult(). Appuyez sur CTRL + O, tapez les premières lettres de la méthode et appuyez sur la touche Entrée. La méthode suivante est générée :
+<br>
+<code>@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+}</code>
+<br>
+Avant de récupérer le score, vous devez vous assurer de plusieurs choses :
+<ol>
+  <li>Tout d'abord, assurez-vous que le résultat provient de la bonne activité, en vérifiant le paramètre requestCode. Il doit correspondre à la valeur que vous avez précisée plus haut, en l'occurrence BUNDLE_EXTRA_SCORE.</li>
+  <li>Ensuite, vérifiez que cette activité s'est correctement terminée, en analysant le paramètre resultCode. Sa valeur doit être RESULT_OK, telle que nous l'avions précisée dans l'appel à setResult().</li>
+  <li>Enfin, si tout est correct,  vous pouvez récupérer le score. Pour récupérer le score, sachant qu'il a été stocké en tant qu'entier, la méthode à utiliser est getIntExtra()</li>
+</ol> 
+<br>
+Le code correspondant est le suivant :
+<code> if (GAME_ACTIVITY_REQUEST_CODE == requestCode && RESULT_OK == resultCode) {
+    // Fetch the score from the Intent
+    int score = data.getIntExtra(GameActivity.BUNDLE_EXTRA_SCORE, 0);
+} </code>
+
+Voilà. Notez la signature de la méthode getIntExtra() : le second paramètre permet de préciser une valeur par défaut au cas où la valeur demandée n'existerait pas.
+                    </p>
+                    <h1> 2. Mémorisez les préférences du joueur</h1>
+                    <p>
+                      
+                      <br>
+                     <h4 class="titrebleu"> La gestion des préférences</h4> 
+                     <h5>Description</h5>/<br>
+                     L'API mise à disposition par Android pour sauvegarder des informations locales à l'application s'appelle SharedPreferences. C'est une couche d'abstraction qui vous facilite la vie : elle récupère les données que vous lui passez et les stocke dans un fichier XML. <br>
+
+L'API offre la possibilité d'utiliser différents fichiers pour stocker les informations. Cela a du sens dans une application importante avec des données très variées. Dans notre cas, nous allons utiliser la version standard : un seul fichier de stockage est géré, et cela automatiquement.<br>
+
+Pour accéder à l'instance de SharedPreferences, il suffit d'appeler la méthode getPreferences() sur l'activité courante, comme ceci :<br>
+<code>SharedPreferences preferences = getPreferences(MODE_PRIVATE);</code> <br>
+Si nous avions souhaité utiliser un autre fichier de stockage, nous aurions utilisé plutôt : <br>
+<code>SharedPreferences preferences = getSharedPreferences("nom fichier", MODE_PRIVATE);</code> <br>
+Le paramètre MODE_PRIVATE permet de préciser que les données du fichier sont accessibles seulement par notre application. Encore heureux ! Eh oui, historiquement il existait d'autres modes qui permettaient à des applications tierces de venir lire et écrire dans votre fichier. C'est scandaleux, n'est-ce pas ? Je suis bien d'accord avec vous ! C'est pourquoi Google a décidé de rendre ces modes obsolètes, pour des raisons évidentes de sécurité. Donc partez du principe que vous utiliserez toujours le mode MODE_PRIVATE.<br>
+ <h5>Écriture</h5> <br>
+ Pour pouvoir modifier les informations stockées dans les SharedPreferences, il est obligatoire d'utiliser l'API SharedPreferences.Editor. <br>
+
+Tout d'abord, une information stockée est toujours associée à une clé, permettant ainsi de récupérer précisément une valeur souhaitée sans avoir à récupérer l'ensemble des données. <br>
+
+Ensuite, il est obligatoire de préciser le type de donnée stockée, en utilisant la méthode correspondante. Par exemple, pour stocker une chaîne de caractères, il faudra utiliser une méthode spécifique appelée putString(). Et pour stocker un entier, il faudra utiliser la méthode putInt(). <br>
+
+Enfin, pour valider la modification, il est nécessaire d'appeler la méthode apply(). <br>
+
+Par exemple, pour stocker le prénom de l'utilisateur, le code serait donc le suivant : <br>
+<code>SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+SharedPreferences.Editor editor = preferences.edit();
+editor.putString("firstname", mUser.getFirstName());
+editor.apply();
+</code>
+<br>
+Sachant que vous êtes aussi flemmards que moi, vous préférerez probablement utiliser la version courte : <br>
+<code>
+  SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+preferences.edit().putString("firstname", mUser.getFirstName()).apply();
+</code>
+<br>
+Je sais que vous êtes très perspicaces et que vous avez noté les deux choses suivantes : <br>
+
+1-La clé utilisée pour stocker le prénom de l'utilisateur est firstname ; <br>
+
+2-Le prénom de l'utilisateur est récupéré du modèle.<br>
+
+De même, il serait préférable de créer une constante pour stocker la chaîne de caractères "firstname". Le code sera plus facilement maintenable et moins sujet aux erreurs de frappe. <br>
+<h5>
+  Lecture
+</h5>
+<br>
+Comme pour l'écriture, la lecture d'une valeur requiert l'appel à une méthode spécifique suivant le type de donnée à récupérer. Par exemple, pour récupérer une chaîne de caractères, il faudra utiliser getString(), alors qu'un entier sera récupéré en utilisant getInt(). Par exemple, pour récupérer le prénom de l'utilisateur, le code suivant sera utilisé :
+<code>String firstname = getPreferences(MODE_PRIVATE).getString("firstname", null);</code>
+<br>
+<h4 class="titrebleu"> Mise en Application </h4> 
+Grâce à la section précédente, vous devez être en mesure de stocker et récupérer le prénom de l'utilisateur, tout cela dans la MainActivity. <br>
+<h5>Exercice :</h5> <br>
+Bon, ce n'est pas juste qu'il n'y ait que moi qui bosse. J'ai un petit exercice pour vous. Je vous propose de mettre à jour le code de la MainActivity de la façon suivante :
+<ul>
+  <li>Lorsque l'activité démarre, vérifiez si une partie a déjà eu lieu (indice : si tel est le cas, un prénom et un score doivent avoir été enregistrés dans les préférences ;
+</li>
+  <li>Récupérez ces valeurs et mettez à jour le texte d'accueil, en saluant la personne et en lui rappelant son précédent score ;</li>
+  <li>Valorisez également le champ de saisie avec le prénom de la personne, afin d'éviter qu'elle ait à le saisir de nouveau. N'oubliez pas de positionner le curseur à la fin du prénom !
+</li>
+  <li>Pensez également à mettre à jour l'affichage lorsqu'une partie vient de se terminer !</li>
+</ul>
+<br>
+Le résultat doit être le suivant : <br>
+<img src="exo.png">
+                    </p>
+
+                    <h1> 3.Améliorez l'expérience utilisateur </h1>
+                    <p>nous allons améliorer l'expérience utilisateur, c'est à dire nous assurer que le joueur soit correctement informé des différents événements, qu'il ne se sente pas perdu et qu'il soit heureux d'utiliser votre application. 
+                      
+                      <br>
+                     <h4 class="titrebleu"> Amélioration de l'expérience utilisateur</h4> 
+                     <br>Avec l'implémentation que nous venons de mettre en place, vous devez constater la chose suivante : dès que le joueur sélectionne une réponse, la question suivante se met systématiquement à jour alors que le message Toast n'a même pas eu le temps de disparaitre. <br>
+
+Dans l'idéal, il faudrait attendre que le message Toast disparaisse pour ensuite afficher la question suivante. Et entre temps, ce serait encore mieux d'empêcher l'utilisateur d'appuyer sur un autre bouton. <br>
+
+Cette section introduit des concepts qui peuvent vous paraître obscurs pour l'instant. Si vous ne les comprenez pas tout de suite, aucun problème. Vous vous familiariserez avec eux au fur et à mesure des prochains cours.<br>
+
+ <h5>Temporisation</h5> <br>
+ Nous allons utiliser ici une méthode d'attente très simple : nous allons demander au système de patienter deux secondes avant d'exécuter notre bout de code. Cela permettra d'attendre la fin de l'affichage du message Toast. Voici le code : <br>
+
+<code>new Handler().postDelayed(new Runnable() {
+    @Override
+    public void run() {
+        // If this is the last question, ends the game.
+        // Else, display the next question.
+    }
+}, 2000); // LENGTH_SHORT is usually 2 second long</code> <br>
+La classe Handler permet de communiquer avec le système pour lui demander d'exécuter une action. La méthode associée est postDelayed(). Le premier paramètre est un objet de type Runnable, c'est à dire l'action que vous souhaitez accomplir. L'action est déterminée dans la méthode run(). <br>
+
+Le second paramètre est la durée d'attente, en millisecondes. Vous pouvez adapter la durée d'attente suivant la durée d'affichage du Toast que vous avez choisie (LENGTH_SHORT = 2s et LENGTH_LONG = 3.5s). <br>
+
+De la même manière, je vous laisse réfléchir un peu et développer vous-même ce que vous allez mettre dans cette méthode run(). <br>
+
+<i class="fas fa-exclamation-circle"></i>Le code ci-dessus contient une fuite mémoire. Si vous souhaitez en savoir plus, je vous invite à lire cet article. Pour le besoin du cours, nous pouvons vivre avec, je vous promets que votre téléphone ne va pas dégouliner. Nous verrons dans un prochain cours comment détecter et corriger ces éventuelles fuites. Merci Super Mario. <br>
+<h5>Désactivation des clics</h5> <br>
+Dès que l'utilisateur a sélectionné une réponse et que le message Toast s'affiche, il faut l'empêcher de cliquer de nouveau sur une autre réponse, le temps d'afficher la question suivante. <br>
+
+Pour ce faire, nous allons utiliser la méthode dispatchTouchEvent(). C'est une méthode de la classe Activity, qui est appelée à chaque fois qu'un utilisateur touche l'écran. Elle est un endroit idéal pour ignorer temporairement les clics de l'utilisateur.  Je vous invite à surcharger cette méthode, en utilisant le raccourci CTRL + O (O pour Override), en tapant les premières lettres pour trouver la méthode, puis en appuyant sur la touche Entrée. La signature de la méthode est la suivante : <br>
+<code>public boolean dispatchTouchEvent(MotionEvent ev);</code> <br>
+Le booléen renvoyé permet de dire au système si l'action de l'utilisateur doit être prise en compte ou non. Si l'action doit être ignorée, renvoyez false. Sinon, appelez la méthode de la classe mère. Par exemple, l'implémentation pourrait être : <br>
+<code> return mEnableTouchEvents && super.dispatchTouchEvent(ev);</code>
+<br>
+Il vous suffit simplement de gérer un attribut de classe (nommé mEnableTouchEvents), et de le valoriser à true lorsque les actions doivent être prises en compte, ou à false si elles doivent être ignorées.
+                    </p>
+                    <h1>4. Comprenez le cycle de vie d'une activité </h1> <br>
+                    <p>
+                      Nous allons étudier dans ce cours comment fonctionne le cycle de vie d'une activité. C'est un sujet très important que tout développeur Android doit savoir maîtriser. Non, je ne vous mets pas la pression. Et de toute façon, comme le disait Desproges : la pression, je préfère la boire plutôt que la subir.  <br>
+                      <h4 class="titrebleu"> Description </h4> <br>
+                      Lorsque votre réveil sonne le matin, vous passez de l'état endormi à l'état réveillé. Ensuite, lorsque vous vous levez puis vous préparez à aller travailler, vous passez de l'état réveillé à opérationnel. Tout au long de la journée, vous passez d'un état à l'autre. <br>
+
+Sous Android, une activité passe également par différents états. Entre chaque état, le système appelle certaines méthodes bien spécifiques, dans un ordre déterministe. Vous connaissez déjà une de ces méthodes : onCreate(). <br>
+
+Voici les différents états dans lesquels une activité peut se trouver : <br>
+<img src="etatact.png">
+<br>
+Par défaut, la méthode onCreate() est automatiquement surchargée lorsque vous créez une nouvelle activité. Mais comme vous pouvez le voir sur le diagramme ci-dessus, il en existe d'autres, que nous allons découvrir maintenant.
+
+                      <br>
+<h5> La méthode onCreate() </h5> <br>
+Cette méthode, que vous connaissez déjà, est appelée lorsque votre activité est créée par le système et qu'elle entre dans l'état Created. <br>
+
+Généralement, les opérations effectuées dans cette méthode servent à mettre en place l'interface graphique, à initialiser les variables, à configurer les listeners ou à se connecter au modèle. <br>
+
+Vous aurez noté que cette méthode prend en paramètre une variable savedInstanceState de type Bundle. Cette variable contient le dernier état sauvegardé de l'activité. Ne vous inquiétez pas si vous ne comprenez pas, vous en saurez plus un peu plus bas ! <br>
+
+À ce stade, l'activité est créée, mais l'utilisateur ne la voit pas encore et ne peut pas interagir avec. <br>
+                      
+                      
+                      <h5>  La méthode onStart()</h5> <br>
+                      Cette méthode est appelée par le système lorsque l'activité entre dans l'état Started. L'interface graphique devient visible à l'utilisateur, mais il ne peut pas encore interagir avec les différents éléments.<br>
+                        <br>
+
+                      <h5> La méthode onResume() </h5> <br>
+                      Cette méthode est appelée lorsque l'activité entre dans l'état Resumed. L'activité devient entièrement opérationnelle. L'utilisateur peut utiliser l'application et cliquer sur les différents éléments graphiques. <br>
+
+L'application reste dans cet état tant qu'il n'y a pas d'interruption, comme par exemple, la réception d'un appel téléphonique, le démarrage d'une nouvelle activité ou l'affichage d'une boîte de dialogue. <br>
+                      <br>
+
+
+                      <h5>La méthode onPause()  </h5> <br>
+                      Cette méthode est appelée lorsque l'activité entre dans l'état Paused. Cette méthode est le pendant de la méthode onResume() : tout ce qui est initié dans onResume() doit être mis en pause dans cette méthode. Par exemple, une animation présentée à l'utilisateur est démarrée dans onResume() puis stoppée dans onPause().
+
+Les traitements effectués dans cette méthode doivent être les plus courts possibles. <br>
+<h5> La méthode onStop()</h5> <br>
+Cette méthode est appelée lorsque l'activité entre dans l'état Stopped. Par exemple, lorsqu'une nouvelle activité est démarrée, l'activité appelante va se retrouver dans cet état. Elle n'est donc plus visible à l'utilisateur. Les traitements liés à la mise à jour de l'interface graphique peuvent être arrêtés.
+
+Les traitements effectués dans cette méthode peuvent être plus importants (comme sauvegarder certaines valeurs dans les SharedPreferences par exemple).
+<br> 
+<h5>La méthode onDestroy()</h5> <br>
+Cette méthode est appelée lorsque l'activité est arrêtée. Par exemple, ce peut être après avoir appelée la méthode finish(), ou si le système décide d'arrêter l'activité pour libérer de la mémoire.
+<br>
+                      <h4 class="titrebleu"> Mise en Application </h4> <br>
+                      Pour bien comprendre l'enchaînement des méthodes, je vous invite à toutes les surcharger (sauf onCreate() qui l'est déjà) dans vos deux activités, et d'afficher leur appel dans la console. Pour rappel, l'affichage d'une trace en Java s'effectue de la sorte (nous verrons dans le cours suivant comment utiliser le système de trace spécifique à Android) : <br>
+
+<code>System.out.println("MainActivity :: onStart()"); </code> <br>
+Lancer l'application, appuyez sur le bouton pour démarrer une nouvelle partie, jouez-la jusqu'à la fin et attendez de revenir sur l'écran principal. Vous devriez obtenir : <br>
+<img src="trace.png" id="trac">
+<br>
+Pour avoir un affichage similaire, veillez à :
+<ol>
+  <li>Sélectionner l'onglet Android Monitor en bas à gauche d'Android Studio ;</li>
+  <li> Sélectionner le nom de l'émulateur si vous testez sur l'émulateur, ou le nom de votre équipement si vous testez sur un téléphone ou une tablette, ainsi que le nom du processus ;</li>
+  <li>Sélectionner l'onglet logcat ;</li>
+  <li>Filtrer l'affichage des traces en tapant System.out dans la zone de recherche. Cela vous évitera d'être pollué par l'ensemble des traces générées par le système.</li>
+</ol>
+<br>
+Du côté de MainActivity, nous avons :
+
+<br>
+<ul>
+  <li>onCreate() / onStart() / onResume() : l'activité est démarrée ;</li>
+  <li>onPause() : l'activité est en pause, car l'activité GameActivity va être démarrée ;</li>
+  <li>onStop() : l'activité est stoppée, car c'est l'activité GameActivity qui est au premier plan ;</li>
+  <li>onStart() / onResume() : l'activité reprend, car l'activité GameActivity est terminée.</li>
+</ul>
+<br>
+Du côté de GameActivity, nous avons : <br>
+<ul>
+  <li>onCreate() / onStart() / onResume() : l'activité est démarrée ;</li>
+  <li>onPause() / onStop() / onDestroy() : l'activité se termine puis est détruite.</li>
+
+</ul>
+<br>
+Ci-dessous le schéma extrait de  <a href="https://developer.android.com/guide/components/activities/activity-lifecycle#alc">la page Google</a>  qui synthétise ce que nous venons de voir :
+<br>
+<img src="cycle.png"> 
+
+
+
+                    </p>
+
+                    <h1>5. Tournez votre équipement : que se passe-t-il ? </h1>
+                    <p> <h4 class="titrebleu">Introduction </h4> <br>
+                      Lancez l'application, saisissez votre prénom et appuyez sur le bouton de démarrage de jeu. Observez la question posée. Tournez votre téléphone pour changer l'orientation (si vous êtes en mode portrait, passez en mode paysage, et vice-versa). Répétez l'opération plusieurs fois. Que constatez-vous ? La question posée est presque à chaque fois différente ! Pourquoi ? C'est ce que nous allons découvrir dans ce chapitre. <br>
+                      Si la question affichée et toujours la même, c'est que votre implémentation diffère légèrement de celle de ce cours. Vous n'avez pas dû mélanger les questions lorsque vous les ajoutez à la banque de questions ! Aucun souci, récupérez si nécessaire <a href="https://github.com/fponroy/TopQuiz">mon implémentation sur GitHub </a> ou mettez à jour votre code pour qu'il soit homogène. <br>
+                      <h4 class="titrebleu">Le changement d'orientation  </h4> <br>
+                      Nous sommes tous libres de changer d'orientation. Regardez, avant j'étais agent secret, maintenant je suis votre professeur Android préféré. Ah non, je m'égare, ce n'est pas de ce changement d'orientation dont je voulais parler ! <br>
+
+Vous l'aviez compris, je voulais plutôt parler du changement d'orientation de votre équipement. Je vais être très vilain et vous ôter tout suspens : lorsque le système Android effectue une rotation de l'écran, il détruit votre activité et la crée de nouveau. Oui je suis d'accord, c'est inadmissible ! <br>
+<h5>Sauvegarde et restauration des données</h5>
+                      <br>
+                      Heureusement, Android ne nous laisse pas seuls sur le bord de la route avec notre problème. Avant d'arrêter une activité, Android appelle la méthode suivante sur l'instance en cours : 
+                      <br>
+                      <code>public void onSaveInstanceState(Bundle savedInstanceState);</code> <br>
+                      Le paramètre savedInstanceState (ou parfois nommée outState) vous rappelle quelque chose ? Exactement, c'est la même information qui est passée en paramètre de la méthode onCreate(). En d'autres termes, dans la méthode onSaveInstanceState(), nous allons ajouter au Bundle toutes les informations pertinentes nous permettant de revenir dans l'état dans lequel nous nous trouvions avant que l'activité soit redémarrée. Les deux paramètres que nous allons sauvegarder sont le score de l'utilisateur et l'indice de la question à laquelle il est rendu. <br>
+                      <i class="fas fa-exclamation-circle"></i> "Par mesure de simplicité, nous n'allons pas sauvegarder les questions déjà posées pour éviter d'afficher les mêmes, car c'est un sujet assez complexe. De ce fait, dans le cadre de ce cours, il faut accepter de retomber éventuellement sur les mêmes questions.
+
+Si vous êtes très curieux (et très joueurs), vous pouvez essayer de corriger ce problème de plusieurs façons :
+
+Vous sauvegardez le modèle pour le récupérer dans le même état. Pour ce faire, il faut que le modèle implémente l'interface Parcelable ;
+
+Vous mettez à jour QuestionBank pour pouvoir commencer à la question n. Mais cela vous oblige à désactiver le mélange automatique des questions, afin de conserver un ordre déterministe". <br>
+Le principe de sauvegarde dans le Bundle est identique aux SharedPreferences ou aux Intent : vous devez préciser une clé, et utiliser la méthode correspondant au type de la donnée à sauvegarder. Sachant que nous souhaitons sauvegarder deux entiers, nous allons utiliser la méthode putInt(). <br>
+
+Afin de récupérer les données plus facilement, créez les deux clés sous forme de constantes dans la classe GameActivity : <br>
+<code>public static final String BUNDLE_STATE_SCORE = "currentScore";
+public static final String BUNDLE_STATE_QUESTION = "currentQuestion";</code>
+<br>
+Ensuite, sauvegardez la valeur du score et de l'index de questions, et surtout n'oubliez pas d'appeler l'implémentation de la classe mère : <br>
+<code>@Override
+protected void onSaveInstanceState(Bundle outState) {
+
+    outState.putInt(BUNDLE_STATE_SCORE, mScore);
+    outState.putInt(BUNDLE_STATE_QUESTION, mNumberOfQuestions);
+        
+    super.onSaveInstanceState(outState);
+}</code> <br>
+Maintenant, il vous suffit de récupérer ces valeurs dans la méthode onCreate(), en vous assurant que le paramètre Bundle est bien valorisé (il peut valoir null, notamment lorsque l'activité est démarrée pour la première fois) : <br>
+<code>if (savedInstanceState != null) {
+    mScore = savedInstanceState.getInt(BUNDLE_STATE_SCORE);
+    mNumberOfQuestions = savedInstanceState.getInt(BUNDLE_STATE_QUESTION);
+} else {
+    mScore = 0;
+    mNumberOfQuestions = 4;
+}</code> <br>
+ Il est également possible d'utiliser le pendant de la méthode onSaveInstanceState(), qui est onRestoreInstanceState(). Je vous laisse découvrir comment l'implémenter sur 
+  <a href="https://developer.android.com/guide/components/activities/activity-lifecycle#saras"> cette page.</a> <br>
+
+
+                   <h4 class="titrebleu"> Conclusion </h4> <br>
+                   Nous y sommes, ce chapitre conclut notre premier cours. Vous avez une application au top, j'espère que vous serez fiers de la montrer à votre entourage !! 
+                     <img src="bravo.jpg">
+
+                    </p>
+
+    
+                   <input type="button"  id="btn4" value="QUIZ" onclick="javascript:location.href='quizz.html'">
+
+
+                </article>
+             
+                
+                <aside id="aside1">
+                    <h1>À Lire ! </h1>
+              
+                 <p><i class="fas fa-exclamation-circle"></i> Voilà, vous savez comment sauvegarder des données simples grâce aux SharedPreferences. Si vous souhaitez en savoir davantage sur ce mécanisme, n'hésitez pas à consulter <a href="https://developer.android.com/training/data-storage/shared-preferences"> cette page </a> et <a href="https://developer.android.com/guide/topics/data/data-storage#pref"> cette page </a> .</p>
+          
+                </aside>
+                
+
+                
+
+
+            </section>
+            
+            <footer>
+                <div id="App">
+                    2018 Copyright , All right reserved
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>
